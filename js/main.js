@@ -10,7 +10,9 @@
 		myCanvas.style.border = "red 1px solid";
 
 		//new stage
-		stage = new	createjs.stage;
+		stage = new createjs.Stage("YouNeedAFuckingPARAMETER");
+		//and pay attention to typos man stage is uppercase
+		//stage = new	createjs.stage;
 
 		// grab canvas width and height for later calculations:
 		w = stage.canvas.width;
