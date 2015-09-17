@@ -43,7 +43,7 @@
    		 	stage.update();
 		}
 		function doneLoading(event) {
-		     	clearInterval(loadingInterval);
+		     	window.clearInterval(window.loadingInterval);
 	     		messageField.text = "Click to start";
 	     		watchRestart();
 		}
@@ -51,6 +51,11 @@
 		    canvas.onclick = handleClick;
 		    stage.addChild(messageField);
 		    stage.update();
+		}
+
+		function handleClick() {
+    			stage.removeChild(messageField);
+   			restart();
 		}
 
 
