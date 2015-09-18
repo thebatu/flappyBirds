@@ -52,20 +52,32 @@
 		     	window.clearInterval(window.loadingInterval);
 	     		messageField.text = "Click to start";
 	     		watchRestart();
-	     		console.log("here 2");
+	     		 console.log("doneLoading");
+
 		}
 		function watchRestart() {
 		    canvas.onclick = handleClick;
 		    stage.addChild(messageField);
 		    stage.update();
-		    console.log("here 3");
+		    console.log("watchRestart");
 		}
 
 		function handleClick() {
     			stage.removeChild(messageField);
-   			stage.update();
    			restart();
+		}
 
+		function restart() {
+		    scene.removeAllChildren();
+		    floorImage = preload.getResult("floor");
+		    floor = new createjs.Bitmap(floorImage);
+		    floor.x = 0;
+		    floor.y = 192;
+		    cloudsImage = preload.getResult("clouds");
+		    clouds = new createjs.Bitmap(cloudsImage);
+		    clouds.x = 0;
+		    clouds.y = 0;
+		    scene.addChild(clouds,floor);
 		}
 
 
