@@ -23,7 +23,6 @@
             //messageField.maxWidth = 1000;
             //messageField.textAlign = "center";
             messageField.x = w.width/2;
-            console.log(messageField.x);
             messageField.y = h.height/2;
             stage.addChild(messageField);
             stage.update();
@@ -33,29 +32,40 @@
 		 	{id:"clouds", src:"../assets/art/background2.png"}
 		];
 
-		preload = new createjs.LoadQueue();
-		preload.addEventListener("complete", doneLoading);
+		preload = new createjs.LoadQueue(false);
 		preload.addEventListener("progress", updateLoading);
+		preload.addEventListener("complete", doneLoading);
 		preload.loadManifest(manifest);
+		//preload.load;
+		console.log("here");
+
 
 		function updateLoading() {
    			messageField.text = "Loading " + (preload.progress*100|0) + "%"
    		 	stage.update();
+   		 	console.log("updateLoading");
+   		 	// Ticker.setFPS(30);
+   		 	// Ticker.addListener(stage);
+
 		}
 		function doneLoading(event) {
 		     	window.clearInterval(window.loadingInterval);
 	     		messageField.text = "Click to start";
 	     		watchRestart();
+	     		console.log("here 2");
 		}
 		function watchRestart() {
 		    canvas.onclick = handleClick;
 		    stage.addChild(messageField);
 		    stage.update();
+		    console.log("here 3");
 		}
 
 		function handleClick() {
     			stage.removeChild(messageField);
+   			stage.update();
    			restart();
+
 		}
 
 
