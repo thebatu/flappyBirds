@@ -101,23 +101,30 @@
 		canvas.onclick = doJump;
 		function doJump(){
 			console.log("inside do jump");
-			jump = 20;
-			console.log(sonic.y);
-			sonic.y = sonic.y-40;
-			console.log(sonic.y);
-			//sonic.y = sonic.y-jump;
-			//jump = sonic.y;
-			if (jump > 0){
-			console.log("jump :"+jump);
+			jump=20;
+			sonic.y = sonic.y-28;
 
-     				jump = jump/2;
+			if (sonic.currentAnimation != "up") {
+		               sonic.gotoAndPlay("up");
+		               console.log("up");
+		           }
+			else{
+			          if (sonic.currentAnimation != "straight") {
+		           			sonic.gotoAndPlay("straight");
+			                	console.log("straight");
+			          }
+			      }
+
+			if (sonic.currentAnimation !="down"){
+				sonic.gotoAndPlay("down");
 			}
-		}
+
+			}
+
 
 		if (!createjs.Ticker.hasEventListener("tick")) {
 	 		 	createjs.Ticker.addEventListener("tick", tick);
 			}
-
 
 			function tick(event) {
 				console.log(clouds);
@@ -129,7 +136,7 @@
 				if (floor2.x == -674){floor2.x = 674;}
 				if (clouds.x == -640){clouds.x = 640;}
 				if (clouds2.x == -640){clouds2.x = 640;}
-				sonic.y = sonic.y+2;
+				sonic.y = sonic.y+3;
 				scene.update(event);
 			}
 
