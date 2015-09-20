@@ -82,30 +82,6 @@
 	    		scene.addChild(clouds,clouds2,floor,floor);
 	    		scene.update();
 
-		    	if (!createjs.Ticker.hasEventListener("tick")) {
-	 		 	createjs.Ticker.addEventListener("tick", tick);
-			}
-
-
-
-			function tick(event) {
-				console.log(clouds);
-				clouds.x = clouds.x-1;
-				floor.x = floor.x-2;
-				clouds2.x = clouds2.x-1;
-				floor2.x = floor2.x-2;
-		    	      	if (floor.x == -674){floor.x = 674;}
-				if (floor2.x == -674){floor2.x = 674;}
-				if (clouds.x == -640){clouds.x = 640;}
-				if (clouds2.x == -640){clouds2.x = 640;}
-				scene.update(event);
-				canvas.onclick = doJump();
-
-
-			}
-
-
-
 		sonicImage = queue.getResult("sonic");
 		var dataSonic= new createjs.SpriteSheet({
 			"images": [sonicImage],
@@ -119,19 +95,18 @@
 		sonic.framerate = 5;
 		sonic.x = 50;
 		sonic.y = 50;
-		jump = 0;
 
 		scene.addChild(clouds,clouds2,floor,floor2,sonic);
 
-
+		canvas.onclick = doJump;
 		function doJump(){
 			console.log("inside do jump");
 			jump = 20;
 			console.log(sonic.y);
-			sonic.y = sonic.y+10;
+			sonic.y = sonic.y-40;
 			console.log(sonic.y);
-			sonic.y = sonic.y-jump;
-			jump = sonic.y;
+			//sonic.y = sonic.y-jump;
+			//jump = sonic.y;
 			if (jump > 0){
 			console.log("jump :"+jump);
 
@@ -139,6 +114,24 @@
 			}
 		}
 
+		if (!createjs.Ticker.hasEventListener("tick")) {
+	 		 	createjs.Ticker.addEventListener("tick", tick);
+			}
+
+
+			function tick(event) {
+				console.log(clouds);
+				clouds.x = clouds.x-1;
+				floor.x = floor.x-2;
+				clouds2.x = clouds2.x-1;
+				floor2.x = floor2.x-2;
+		    	      	if (floor.x == -674){floor.x = 674;}
+				if (floor2.x == -674){floor2.x = 674;}
+				if (clouds.x == -640){clouds.x = 640;}
+				if (clouds2.x == -640){clouds2.x = 640;}
+				sonic.y = sonic.y+2;
+				scene.update(event);
+			}
 
 
 
