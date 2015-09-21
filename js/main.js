@@ -7,6 +7,7 @@
 	var jump;
 
 
+
 	function init () {
 		//to be removed before deploying
 		gameCanvas.style.border = "red 1px solid";
@@ -27,7 +28,8 @@
 		 var manifest = [
 		 	{id:"floor", src:"../assets/art/background1.png"},
 		 	{id:"clouds", src:"../assets/art/background2.png"},
-		 	{id:"sonic", src:"../assets/art/sonic.png"}
+		 	{id:"sonic", src:"../assets/art/sonic.png"},
+		 	{id:"enemy", src:"../assets/art/enemy.png"}
 		];
 
 		queue = new createjs.LoadQueue(false);
@@ -35,7 +37,6 @@
 		queue.addEventListener("complete", doneLoading);
 		queue.loadManifest(manifest);
 		console.log("here");
-
 
 		function updateLoading() {
    			messageField.text = "Loading " + (queue.progress*100|0) + "%"
@@ -95,50 +96,81 @@
 		sonic.framerate = 5;
 		sonic.x = 50;
 		sonic.y = 50;
+		scene.addChild(sonic);
 
-		scene.addChild(clouds,clouds2,floor,floor2,sonic);
+
+		var enemyImage = queue.getResult("enemy");
+		var dataEnemy = new createjs.SpriteSheet({
+			"images": [enemyImage],
+		     	"frames": {"regX": 0, "height": 52, "count": 2, "regY": 0, "width": 48},
+		     	"animations":
+		     		{"stay": [0, 1, "stay"]}
+		})
+
+		numEnemies = 6;
+		enemies = [];
+		var hole = Math.floor(Math.random()*numEnemies);
+		for (var i = 0; i<numEnemies;i++){
+		enemies[i] = new createjs.Sprite(dataEnemy, "stay");
+          		enemies[i].framerate = Math.floor((Math.random()*8));
+		enemies[i].x = 150;
+		enemies[i].y = (50*i)-8;
+
+			if (i >hole){
+				enemies[i].y = enemies[i].y+100;
+			}
+		}
+
+		for (var i =0; i<numEnemies;i++){
+			scene.addChild(enemies[i]);
+		}
+
+
 
 		canvas.onclick = doJump;
 		function doJump(){
-			console.log("inside do jump");
 			jump=20;
-			sonic.y = sonic.y-28;
-
-			if (sonic.currentAnimation != "up") {
-		               sonic.gotoAndPlay("up");
-		               console.log("up");
-		           }
-			else{
-			          if (sonic.currentAnimation != "straight") {
-		           			sonic.gotoAndPlay("straight");
-			                	console.log("straight");
-			          }
-			      }
-
-			if (sonic.currentAnimation !="down"){
-				sonic.gotoAndPlay("down");
-			}
-
+			sonic.y = sonic.y-20;
+			sonic.gotoAndPlay("up");
+			console.log("up");
 			}
 
 
 		if (!createjs.Ticker.hasEventListener("tick")) {
 	 		 	createjs.Ticker.addEventListener("tick", tick);
-			}
+		}
 
-			function tick(event) {
-				console.log(clouds);
-				clouds.x = clouds.x-1;
-				floor.x = floor.x-2;
-				clouds2.x = clouds2.x-1;
-				floor2.x = floor2.x-2;
-		    	      	if (floor.x == -674){floor.x = 674;}
-				if (floor2.x == -674){floor2.x = 674;}
-				if (clouds.x == -640){clouds.x = 640;}
-				if (clouds2.x == -640){clouds2.x = 640;}
-				sonic.y = sonic.y+3;
-				scene.update(event);
+		function tick(event) {
+			console.log(clouds);
+			clouds.x = clouds.x-1;
+			floor.x = floor.x-2;
+			clouds2.x = clouds2.x-1;
+			floor2.x = floor2.x-2;
+	    	      	if (floor.x == -674){floor.x = 674;}
+			if (floor2.x == -674){floor2.x = 674;}
+			if (clouds.x == -640){clouds.x = 640;}
+			if (clouds2.x == -640){clouds2.x = 640;}
+			sonic.y = sonic.y+3;
+			//sonic.gotoAndPlay("down");
+			for (var i = 0;i<numEnemies;i++){
+    				if (enemies[i] != null){
+        					enemies[i].x = enemies[i].x-3;
+    				}
 			}
+			for (var i = 0;i<numEnemies;i++){
+			     if (enemies[i] != null){
+			          enemies[i].x = enemies[i].x-6;
+			          if (enemies[i].x < -60){
+			          		enemies[i].x = 350;
+			               	enemies[i].y = (50*i)-8;
+			               	if (i > hole){
+			                    		enemies[i].y = enemies[i].y+100;
+			               }
+			          }
+			     }
+			}
+			scene.update(event);
+		}
 
 
 
