@@ -1,5 +1,4 @@
 
-	console.log("working");
 
 
 	var stage, w, h, loader;
@@ -29,33 +28,30 @@
 		 	{id:"floor", src:"../assets/art/background1.png"},
 		 	{id:"clouds", src:"../assets/art/background2.png"},
 		 	{id:"sonic", src:"../assets/art/sonic.png"},
-		 	{id:"enemy", src:"../assets/art/enemy.png"}
+		 	{id:"enemy", src:"../assets/art/enemy.png"},
+		 	{id:"sonic-1", src:"../assets/art/sonic-1.png"}
 		];
 
 		queue = new createjs.LoadQueue(false);
 		queue.addEventListener("progress", updateLoading);
 		queue.addEventListener("complete", doneLoading);
 		queue.loadManifest(manifest);
-		console.log("here");
 
 		function updateLoading() {
    			messageField.text = "Loading " + (queue.progress*100|0) + "%"
    		 	stage.update();
-   		 	console.log("updateLoading");
 
 		}
 		function doneLoading(event) {
 		     	window.clearInterval(window.loadingInterval);
 	     		messageField.text = "Click to start";
 	     		watchRestart();
-	     		console.log("doneLoading");
 
 		}
 		function watchRestart() {
 		    canvas.onclick = handleClick;
 		    stage.addChild(messageField);
 		    stage.update();
-		    console.log("watchRestart");
 		}
 
 		function handleClick() {
@@ -63,8 +59,9 @@
    			restart();
 		}
 
+
+
 		function restart() {
-			console.log("restart");
 			scene.removeAllChildren();
 			floorImage = queue.getResult("floor");
 			floor = new createjs.Bitmap(floorImage);
@@ -110,38 +107,43 @@
 		numEnemies = 6;
 		enemies = [];
 		var hole = Math.floor(Math.random()*numEnemies);
-		for (var i = 0; i<numEnemies;i++){
-		enemies[i] = new createjs.Sprite(dataEnemy, "stay");
-          		enemies[i].framerate = Math.floor((Math.random()*8));
-		enemies[i].x = 150;
-		enemies[i].y = (50*i)-8;
-
-			if (i >hole){
-				enemies[i].y = enemies[i].y+100;
-			}
+			for (var i = 0; i<numEnemies;i++){
+				enemies[i] = new createjs.Sprite(dataEnemy, "stay");
+		          		enemies[i].framerate = Math.floor((Math.random()*8));
+				enemies[i].x = 150;
+				enemies[i].y = (50*i)-8;
+				if (i >hole){
+					enemies[i].y = enemies[i].y+100;
+				}
 		}
 
 		for (var i =0; i<numEnemies;i++){
 			scene.addChild(enemies[i]);
 		}
 
-
-
 		canvas.onclick = doJump;
 		function doJump(){
 			jump=20;
 			sonic.y = sonic.y-20;
 			sonic.gotoAndPlay("up");
-			console.log("up");
-			}
+		}
 
-
+		for (var i = 0;i<numEnemies;i++){
+				if (enemies[i] != null){
+					enemies[i].x = enemies[i].x-6;
+			          		if (enemies[i].x < -60){
+			          			enemies[i].x = 350;
+			               		enemies[i].y = (50*i)-8;
+			               			if (i < hole){
+			                    				enemies[i].y = enemies[i].y+100;
+			               			}
+			          		}
+			     	}
+		}
 		if (!createjs.Ticker.hasEventListener("tick")) {
 	 		 	createjs.Ticker.addEventListener("tick", tick);
 		}
-
 		function tick(event) {
-			console.log(clouds);
 			clouds.x = clouds.x-1;
 			floor.x = floor.x-2;
 			clouds2.x = clouds2.x-1;
@@ -153,29 +155,24 @@
 			sonic.y = sonic.y+3;
 			//sonic.gotoAndPlay("down");
 			for (var i = 0;i<numEnemies;i++){
-    				if (enemies[i] != null){
-        					enemies[i].x = enemies[i].x-3;
-    				}
-			}
-			for (var i = 0;i<numEnemies;i++){
-			     if (enemies[i] != null){
-			          enemies[i].x = enemies[i].x-6;
-			          if (enemies[i].x < -60){
-			          		enemies[i].x = 350;
-			               	enemies[i].y = (50*i)-8;
-			               	if (i > hole){
-			                    		enemies[i].y = enemies[i].y+100;
+     			if (enemies[i] != null){
+          			enemies[i].x = enemies[i].x-6;
+          			if (enemies[i].x < -60){
+               		enemies[i].x = 350;
+               		enemies[i].y = (50*i)-8;
+               		if (i > hole){
+                    		enemies[i].y = enemies[i].y+100;
 			               }
 			          }
 			     }
 			}
+
 			scene.update(event);
 		}
+			}
 
 
 
-
-		}
 
 
 	}
