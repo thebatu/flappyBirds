@@ -29,7 +29,8 @@ function init () {
 	 	{id:"clouds", src:"../assets/art/background2.png"},
 	 	{id:"sonic", src:"../assets/art/sonic.png"},
 	 	{id:"enemy", src:"../assets/art/enemy.png"},
-	 	{id:"sonic-1", src:"../assets/art/sonic-1.png"}
+	 	{id:"sonic-1", src:"../assets/art/sonic-1.png"},
+	 	{id:"sonicDeath", src:"../assets/art/sonicdeath-1.png"}
 	];
 
 	//Main queue
@@ -112,7 +113,7 @@ function init () {
 		     		{"stay": [0, 1, "stay"]}
 		})
 
-		//enemy spritesheet
+		//enemy spritesheet and gap between enemies
 		numEnemies = 6;
 		enemies = [];
 		var hole = Math.floor(Math.random()*numEnemies);
@@ -144,6 +145,22 @@ function init () {
 	 		 	createjs.Ticker.addEventListener("tick", tick);
 		}
 
+		function die(){
+     		sonicDyingImage= queue.getResult("sonicDeath");
+     		var dataSonicDying= new createjs.SpriteSheet({
+          "images": [sonicDyingImage],
+          "frames": {"regX": 0, "height": 64, "count": 2, "regY": 0, "width": 48},
+          "animations": {"dead": [0, 0, "dead"],
+                                 "hurt": [1, 1, "hurt"]}
+     		});
+    		sonicDying = new createjs.Sprite(dataSonicDying, "hurt");
+     		sonicDying.x = sonic.x;
+     		sonicDying.y = sonic.y;
+     		stage.addChild(sonicDying);
+     		 var index = stage.numChildren;
+     		 console.log(index);
+		}
+
 
 	function tick(event) {
 		//animations clouds and floor
@@ -171,6 +188,21 @@ function init () {
 		               }
 		          }
 		     }
+		}
+
+		var collision = ndgmr.checkPixelCollision(sonic,enemies[0]);
+		var collision;
+		var isHurt = false;
+		var i = 0;
+		while (!collision && i <numEnemies){
+    			var collision = ndgmr.checkPixelCollision(sonic,enemies[i]);
+    			i++;
+		}
+
+		if (collision && !isHurt){
+	     		//canvas.onclick = null;
+	     		isHurt = true;
+	     		die();
 		}
 
 		scene.update(event);
