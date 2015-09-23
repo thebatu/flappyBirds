@@ -146,6 +146,7 @@ function init () {
 		}
 
 		function die(){
+			var isHurt =true;
      		sonicDyingImage= queue.getResult("sonicDeath");
      		var dataSonicDying= new createjs.SpriteSheet({
           "images": [sonicDyingImage],
@@ -153,14 +154,16 @@ function init () {
           "animations": {"dead": [0, 0, "dead"],
                                  "hurt": [1, 1, "hurt"]}
      		});
-    		sonicDying = new createjs.Sprite(dataSonicDying, "hurt");
-     		sonicDying.x = sonic.x;
-     		sonicDying.y = sonic.y;
-     		stage.addChild(sonicDying);
-     		 var index = stage.numChildren;
-     		 console.log(index);
+	     		if (isHurt){
+	    		sonicDying = new createjs.Sprite(dataSonicDying, "hurt");
+	     		sonicDying.x = sonic.x;
+	     		sonicDying.y = sonic.y;
+	     		scene.clear;
+	     		scene.addChild(sonicDying);
+	     		//var index = stage.numChildren;
+	     		//console.log(index);
+			}
 		}
-
 
 	function tick(event) {
 		//animations clouds and floor
@@ -190,6 +193,7 @@ function init () {
 		     }
 		}
 
+		//check on all enemies coll
 		var collision = ndgmr.checkPixelCollision(sonic,enemies[0]);
 		var collision;
 		var isHurt = false;
