@@ -20,8 +20,12 @@ function init () {
 	h = stage.canvas.height;
 
 	messageField = new createjs.Text("Loading", "bold 29px Helvetica", "blue");
-   		stage.addChild(messageField);
-         		stage.update();
+   	stage.addChild(messageField);
+      stage.update();
+
+      gameOverMessage = new createjs.Text("Game Over!", "bold 29px Helvetica", "red");
+
+
 
       //Main manifest
 	 var manifest = [
@@ -160,6 +164,8 @@ function init () {
 	     		sonicDying.y = sonic.y;
 	     		scene.clear;
 	     		scene.addChild(sonicDying);
+	     		scene.addChild(gameOverMessage);
+
 	     		//var index = stage.numChildren;
 	     		//console.log(index);
 			}
@@ -193,7 +199,7 @@ function init () {
 		     }
 		}
 
-		//check on all enemies coll
+		//check collision and call die method
 		var collision = ndgmr.checkPixelCollision(sonic,enemies[0]);
 		var collision;
 		var isHurt = false;
@@ -204,7 +210,7 @@ function init () {
 		}
 
 		if (collision && !isHurt){
-	     		//canvas.onclick = null;
+	     		canvas.onclick = null;
 	     		isHurt = true;
 	     		die();
 		}
