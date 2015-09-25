@@ -1,9 +1,8 @@
 
-
 var stage, w, h, loader;
 var sky, bird;
 var jump;
-
+var isHurt = false;
 
 
 function init () {
@@ -24,8 +23,6 @@ function init () {
       stage.update();
 
       gameOverMessage = new createjs.Text("Game Over!", "bold 29px Helvetica", "red");
-
-
 
       //Main manifest
 	 var manifest = [
@@ -150,40 +147,41 @@ function init () {
 		}
 
 		function die(){
-			var isHurt =true;
+
      		sonicDyingImage= queue.getResult("sonicDeath");
      		var dataSonicDying= new createjs.SpriteSheet({
-          "images": [sonicDyingImage],
-          "frames": {"regX": 0, "height": 64, "count": 2, "regY": 0, "width": 48},
-          "animations": {"dead": [0, 0, "dead"],
-                                 "hurt": [1, 1, "hurt"]}
+                "images": [sonicDyingImage],
+                "frames": {"regX": 0, "height": 64, "count": 2, "regY": 0, "width": 48},
+                "animations": {"dead": [0, 0, "dead"],
+                "hurt": [1, 1, "hurt"]}
      		});
-	     		if (isHurt){
-	    		sonicDying = new createjs.Sprite(dataSonicDying, "hurt");
-	     		sonicDying.x = sonic.x;
-	     		sonicDying.y = sonic.y;
-	     		scene.clear;
-	     		scene.addChild(sonicDying);
-	     		scene.addChild(gameOverMessage);
 
-	     		//var index = stage.numChildren;
+    	    		sonicDying = new createjs.Sprite(dataSonicDying, "hurt");
+    	     		sonicDying.x = sonic.x;
+    	     		sonicDying.y = sonic.y;
+    	     		scene.addChild(sonicDying);
+    	     		scene.addChild(gameOverMessage);
+    	     		scene.removeChild(enemies[0]);
+                 for (var i =0; i<numEnemies;i++){
+                    scene.removeChild(enemies[i]);
+                }
+                  scene.removeChild(sonic);
 	     		//console.log(index);
-			}
+                  isHurt=true;
 		}
 
-	function tick(event) {
+		function tick(event) {
 		//animations clouds and floor
 		clouds.x = clouds.x-1;
 		floor.x = floor.x-2;
 		clouds2.x = clouds2.x-1;
 		floor2.x = floor2.x-2;
-    	      	if (floor.x == -674){floor.x = 674;}
+    	      if (floor.x == -674){floor.x = 674;}
 		if (floor2.x == -674){floor2.x = 674;}
 		if (clouds.x == -640){clouds.x = 640;}
 		if (clouds2.x == -640){clouds2.x = 640;}
 		//sonic's down straight movement
 		sonic.y = sonic.y+3;
-
 
 		// Enemy entering from right side
 		for (var i = 0;i<numEnemies;i++){
@@ -198,11 +196,8 @@ function init () {
 		          }
 		     }
 		}
-
 		//check collision and call die method
 		var collision = ndgmr.checkPixelCollision(sonic,enemies[0]);
-		var collision;
-		var isHurt = false;
 		var i = 0;
 		while (!collision && i <numEnemies){
     			var collision = ndgmr.checkPixelCollision(sonic,enemies[i]);
@@ -210,11 +205,9 @@ function init () {
 		}
 
 		if (collision && !isHurt){
-	     		canvas.onclick = null;
-	     		isHurt = true;
+	     		//canvas.onclick = null;
 	     		die();
 		}
-
 		scene.update(event);
 	}
 }
